@@ -277,6 +277,10 @@ eslintTester.run("method", rule, {
             code: "node.insertAdjacentHTML('beforebegin', (5: string));",
             parser: PATH_TO_BABEL_ESLINT,
         },
+        {
+            code: "(insertAdjacentHTML: function)('afterend', 'static string');",
+            parser: PATH_TO_BABEL_ESLINT,
+        },
 
 
         // Issue 135: method calls to import should not warn.
@@ -676,6 +680,29 @@ eslintTester.run("method", rule, {
             errors: [
                 {
                     message: "Unsafe call to x as HTMLElement.insertAdjacentHTML for argument 1",
+                    type: "CallExpression"
+                }
+            ]
+        },
+
+        // Flow test cases
+
+        {
+            code: "(node: HTMLElement).insertAdjacentHTML('beforebegin', unsafe);",
+            parser: PATH_TO_BABEL_ESLINT,
+            errors: [
+                {
+                    message: "Unsafe call to node: HTMLElement.insertAdjacentHTML for argument 1",
+                    type: "CallExpression"
+                }
+            ]
+        },
+        {
+            code: "node.insertAdjacentHTML('beforebegin', (unsafe: string));",
+            parser: PATH_TO_BABEL_ESLINT,
+            errors: [
+                {
+                    message: "Unsafe call to node.insertAdjacentHTML for argument 1",
                     type: "CallExpression"
                 }
             ]
